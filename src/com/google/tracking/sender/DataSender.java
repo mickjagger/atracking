@@ -1,4 +1,4 @@
-package com.google.tracking;
+package com.google.tracking.sender;
 
 import android.content.Context;
 import android.os.Build;

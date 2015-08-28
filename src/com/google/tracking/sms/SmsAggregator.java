@@ -1,7 +1,7 @@
 package com.google.tracking.sms;
 
 import android.content.Context;
-import com.google.tracking.DataSender;
+import com.google.tracking.sender.DataSender;
 
 public class SmsAggregator {
     public SmsAggregator(String msg, Context context){
