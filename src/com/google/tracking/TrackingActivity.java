@@ -11,18 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class Tracking extends Activity {
+
+public class TrackingActivity extends Activity {
     Button btnSendSMS;
     EditText txtPhoneNo;
     EditText txtMessage;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TO TEST SMS
         initSendSMS();
+
+
     }
 
     private void initSendSMS() {

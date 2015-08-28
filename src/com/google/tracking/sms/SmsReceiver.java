@@ -1,4 +1,4 @@
-package com.google.tracking;
+package com.google.tracking.sms;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
