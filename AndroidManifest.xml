@@ -3,7 +3,7 @@
           package="com.google.tracking"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="21"/>
+    <uses-sdk android:minSdkVersion="17"/>
 
     <application android:label="@string/app_name">
         <activity android:name=".TrackingActivity"
@@ -21,15 +21,22 @@
         </receiver>
 
         <service
+                android:enabled="true"
                 android:name=".service.MonitoringService"
-                android:process=":monitoring_process"
-                android:permission="android.permission.BIND_JOB_SERVICE"
-                android:exported="true"
-                android:isolatedProcess="true">
+                android:process=":mon_process"
+                android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </service>
+
+        <receiver android:name=".service.ScheduleReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".service.StartServiceReceiver">
+        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>

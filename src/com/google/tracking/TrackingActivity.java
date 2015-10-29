@@ -2,20 +2,26 @@ package com.google.tracking;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.tracking.service.MonitoringService;
 
 
 public class TrackingActivity extends Activity {
     Button btnSendSMS;
     EditText txtPhoneNo;
     EditText txtMessage;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,9 @@ public class TrackingActivity extends Activity {
         initSendSMS();
 
 
+
+        Intent intent = new Intent(this, MonitoringService.class);
+        startService(intent);
     }
 
     private void initSendSMS() {
@@ -52,4 +61,21 @@ public class TrackingActivity extends Activity {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, pi, null);
     }
+
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//        private MonitoringService s;
+//
+//        public void onServiceConnected(ComponentName className,
+//                                       IBinder binder) {
+//            MonitoringService.MyBinder b = (MonitoringService.MyBinder) binder;
+//            s = b.getService();
+//            Toast.makeText(TrackingActivity.this, "Connected", Toast.LENGTH_SHORT)
+//                    .show();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName className) {
+//            s = null;
+//        }
+//    };
+
 }
