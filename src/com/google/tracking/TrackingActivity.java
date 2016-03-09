@@ -61,21 +61,4 @@ public class TrackingActivity extends Activity {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, pi, null);
     }
-
-//    private ServiceConnection mConnection = new ServiceConnection() {
-//        private MonitoringService s;
-//
-//        public void onServiceConnected(ComponentName className,
-//                                       IBinder binder) {
-//            MonitoringService.MyBinder b = (MonitoringService.MyBinder) binder;
-//            s = b.getService();
-//            Toast.makeText(TrackingActivity.this, "Connected", Toast.LENGTH_SHORT)
-//                    .show();
-//        }
-//
-//        public void onServiceDisconnected(ComponentName className) {
-//            s = null;
-//        }
-//    };
-
 }
