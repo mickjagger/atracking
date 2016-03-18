@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">com.google.tracking</string>
+    <string name="device_admin_label">com.google.tracking</string>
+    <string name="device_description">com.google.tracking</string>
 </resources>
