@@ -30,7 +30,7 @@ public class TrackingActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TO TEST SMS
-        initSendSMS();
+        //initSendSMS();
 
 
 
