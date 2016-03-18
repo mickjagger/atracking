@@ -40,7 +40,7 @@ public class RecorderController {
 
 
         try {
-            audiofile = File.createTempFile(file_name, ".amr", sampleDir);
+            audiofile = File.createTempFile(file_name, ".am", sampleDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
