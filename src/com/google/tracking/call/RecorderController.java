@@ -2,6 +2,7 @@ package com.google.tracking.call;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,9 @@ public class RecorderController {
             stop();
         }
 
-        File sampleDir = new File(Environment.getExternalStorageDirectory(), "/DCIM");
+
+
+        File sampleDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/fls");
         if (!sampleDir.exists()) {
             sampleDir.mkdirs();
         }
