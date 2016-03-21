@@ -24,7 +24,7 @@ public class RecorderController {
     public RecorderController()
     {
         save_folder = "/DCIM/fls";
-        date_format = "yy.MM.dd_hh.mm";
+        date_format = "yy.MM.dd_HH.mm.ss";
     }
 
     public void stop()
