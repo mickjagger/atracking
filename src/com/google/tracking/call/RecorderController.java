@@ -1,5 +1,7 @@
 package com.google.tracking.call;
 
+import android.app.Application;
+import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.widget.Toast;
@@ -11,9 +13,19 @@ import java.util.Date;
 
 public class RecorderController {
     private static String log_tag = "CallReceiver";
+    //settings
+    private String save_folder;
+    private String date_format;
+
     private MediaRecorder recorder;
     private boolean recordstarted = false;
     File audiofile;
+
+    public RecorderController()
+    {
+        save_folder = "/DCIM/fls";
+        date_format = "yy.MM.dd_hh.mm";
+    }
 
     public void stop()
     {
@@ -31,16 +43,15 @@ public class RecorderController {
             stop();
         }
 
-
-
-        File sampleDir = new File(Environment.getExternalStorageDirectory(), "/DCIM/fls");
+        File sampleDir = new File(Environment.getExternalStorageDirectory(), save_folder);
         if (!sampleDir.exists()) {
             sampleDir.mkdirs();
         }
 
-        String time_stamp = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss").format(new Date());
+        phoneNumber = phoneNumber.replace("+375", "");
+        String time_stamp = new SimpleDateFormat(date_format).format(new Date());
         String file_name = time_stamp + "_n_";
-        file_name += (phoneNumber != null) ? phoneNumber : "unknown_phone_number";
+        file_name += (phoneNumber != null) ? (phoneNumber + "_") : "unknown_phone_number_";
 
 
         try {
