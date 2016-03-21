@@ -84,6 +84,7 @@ public class TService extends Service {
     }
 
     public class CallBr extends BroadcastReceiver {
+        private String log_tag = "CallReceiver";
         Bundle bundle;
         String state;
         String inCall, outCall;
@@ -121,17 +122,20 @@ public class TService extends Service {
                         inCall = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
                         wasRinging = true;
 //                        Toast.makeText(context, "IN : " + inCall, Toast.LENGTH_LONG).show();
+                        Log.d(log_tag, "IN : " + inCall);
 
                     } else if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
                         if (wasRinging == true) {
 
 //                            Toast.makeText(context, "ANSWERED : " + inCall, Toast.LENGTH_LONG).show();
+                            Log.d(log_tag, "ANSWERED : " + inCall);
                             recorderController.record(inCall);
 
                         }
                     } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                         wasRinging = false;
 //                        Toast.makeText(context, "REJECT || DISCO : " + inCall, Toast.LENGTH_LONG).show();
+                        Log.d(log_tag, "REJECT || DISCO : " + inCall);
                         recorderController.stop();
                     }
                 }
@@ -139,6 +143,7 @@ public class TService extends Service {
                 if ((bundle = intent.getExtras()) != null) {
                     outCall = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 //                    Toast.makeText(context, "OUT : " + outCall, Toast.LENGTH_LONG).show();
+                    Log.d(log_tag, "OUT : " + outCall);
                     recorderController.record(outCall);
                 }
             }

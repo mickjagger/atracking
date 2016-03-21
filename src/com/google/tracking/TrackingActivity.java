@@ -65,7 +65,6 @@ public class TrackingActivity extends Activity {
     protected void onResume() {
         super.onResume();
         openDownlads();
-//        super.onDestroy();
     }
 
     @Override

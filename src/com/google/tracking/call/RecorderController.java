@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RecorderController {
+    private static String log_tag = "CallReceiver";
     private MediaRecorder recorder;
     private boolean recordstarted = false;
     File audiofile;
