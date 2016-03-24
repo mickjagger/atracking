@@ -25,6 +25,7 @@ public class TrackingActivity extends Activity {
 
     private static final int REQUEST_CODE = 0;
     private DevicePolicyManager mDPM;
+    private Boolean devicePolicyManagerInited = false;
     private ComponentName mAdminName;
 
     @Override
@@ -40,6 +41,14 @@ public class TrackingActivity extends Activity {
 //        startService(monitoring_intent);
 
 
+        initDevicePolicyManager();
+    }
+
+    /*
+    * Activity should be registered as device admin
+    * in order to have ability of recording calls
+    * */
+    private void initDevicePolicyManager(){
         try {
             // Initiate DevicePolicyManager.
             mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -55,6 +64,7 @@ public class TrackingActivity extends Activity {
                 // Intent intent = new Intent(MainActivity.this,
                 // TrackDeviceService.class);
                 // startService(intent);
+                devicePolicyManagerInited = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +74,10 @@ public class TrackingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        openDownlads();
+        if(devicePolicyManagerInited)
+        {
+            openDownloads();
+        }
     }
 
     @Override
@@ -72,17 +85,17 @@ public class TrackingActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (REQUEST_CODE == requestCode) {
+            devicePolicyManagerInited = true;
             Intent startServiceIntent = new Intent(TrackingActivity.this, TService.class);
             startService(startServiceIntent);
         }
     }
 
-    private void openDownlads() {
-        Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
-        dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getBaseContext().startActivity(dm);
+    private void openDownloads() {
+        Intent viewDonwloads = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        viewDonwloads.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getBaseContext().startActivity(viewDonwloads);
     }
-
 
     private void initSendSMS() {
         setContentView(R.layout.main);
