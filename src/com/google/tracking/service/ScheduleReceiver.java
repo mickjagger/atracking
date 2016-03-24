@@ -17,7 +17,7 @@ public class ScheduleReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         AlarmManager service = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, StartServiceReceiver.class);
+        Intent i = new Intent(context, StartServiceAtBootReceiver.class);
 
         PendingIntent pending = PendingIntent.getBroadcast(context, 0, i,
                 PendingIntent.FLAG_CANCEL_CURRENT);

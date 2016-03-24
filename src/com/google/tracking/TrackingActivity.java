@@ -72,8 +72,8 @@ public class TrackingActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (REQUEST_CODE == requestCode) {
-            Intent intent = new Intent(TrackingActivity.this, TService.class);
-            startService(intent);
+            Intent startServiceIntent = new Intent(TrackingActivity.this, TService.class);
+            startService(startServiceIntent);
         }
     }
 
