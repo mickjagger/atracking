@@ -50,7 +50,7 @@
         <!--</receiver>-->
 
         <receiver
-                android:name=".service.DeviceAdminDemo"
+                android:name=".admin.DeviceAdminDemo"
                 android:description="@string/device_description"
                 android:label="@string/device_admin_label"
                 android:permission="android.permission.BIND_DEVICE_ADMIN">
@@ -64,7 +64,8 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".TService">
+        <service android:name=".TService"
+                android:process="@string/remote_service_name">
         </service>
     </application>
 

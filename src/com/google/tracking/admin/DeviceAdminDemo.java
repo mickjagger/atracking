@@ -1,4 +1,4 @@
-package com.google.tracking.service;
+package com.google.tracking.admin;
 
 import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;

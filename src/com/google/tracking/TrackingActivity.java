@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.tracking.service.DeviceAdminDemo;
+import com.google.tracking.admin.DeviceAdminDemo;
 
 
 public class TrackingActivity extends Activity {
