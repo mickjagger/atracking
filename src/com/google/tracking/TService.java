@@ -17,7 +17,7 @@ public class TService extends Service {
 
     private static final String ACTION_IN = "android.intent.action.PHONE_STATE";
     private static final String ACTION_OUT = "android.intent.action.NEW_OUTGOING_CALL";
-    private CallBr br_call;
+    private CallReceiver callReceiver;
 
 
     @Override
@@ -52,8 +52,8 @@ public class TService extends Service {
         final IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_OUT);
         filter.addAction(ACTION_IN);
-        this.br_call = new CallBr();
-        this.registerReceiver(this.br_call, filter);
+        this.callReceiver = new CallReceiver();
+        this.registerReceiver(this.callReceiver, filter);
 
         // if(terminate != null) {
         // stopSelf();
@@ -61,7 +61,7 @@ public class TService extends Service {
         return START_STICKY;
     }
 
-    public class CallBr extends BroadcastReceiver {
+    public class CallReceiver extends BroadcastReceiver {
         private String log_tag = "CallReceiver";
         Bundle bundle;
         String state;
@@ -69,7 +69,7 @@ public class TService extends Service {
         public boolean wasRinging = false;
         RecorderController recorderController;
 
-        public CallBr() {
+        public CallReceiver() {
             recorderController = new RecorderController();
         }
 
