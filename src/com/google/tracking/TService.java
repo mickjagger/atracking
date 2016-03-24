@@ -5,36 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
-import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 import com.google.tracking.call.RecorderController;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.logging.Handler;
 
 public class TService extends Service {
-    MediaRecorder recorder;
-    File audiofile;
-    String name, phonenumber;
-    String audio_format;
-    public String Audio_Type;
-    int audioSource;
-    Context context;
-    private Handler handler;
-    Timer timer;
-    Boolean offHook = false, ringing = false;
-    Toast toast;
-    Boolean isOffHook = false;
 
 
     private static final String ACTION_IN = "android.intent.action.PHONE_STATE";
@@ -91,7 +69,7 @@ public class TService extends Service {
         public boolean wasRinging = false;
         RecorderController recorderController;
 
-        public CallBr(){
+        public CallBr() {
             recorderController = new RecorderController();
         }
 
