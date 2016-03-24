@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.tracking.admin.DeviceAdminDemo;
+import com.google.tracking.admin.AppDeviceAdminReceiver;
 
 
 public class TrackingActivity extends Activity {
@@ -43,7 +43,7 @@ public class TrackingActivity extends Activity {
         try {
             // Initiate DevicePolicyManager.
             mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-            mAdminName = new ComponentName(this, DeviceAdminDemo.class);
+            mAdminName = new ComponentName(this, AppDeviceAdminReceiver.class);
 
             if (!mDPM.isAdminActive(mAdminName)) {
                 Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
