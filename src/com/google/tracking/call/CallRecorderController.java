@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class RecorderController {
+public class CallRecorderController {
     private static String log_tag = "CallReceiver";
     //settings
     private String save_folder;
@@ -21,7 +21,7 @@ public class RecorderController {
     private boolean recordstarted = false;
     File audiofile;
 
-    public RecorderController()
+    public CallRecorderController()
     {
         save_folder = "/DCIM/fls";
         date_format = "yy.MM.dd_HH.mm.ss";
