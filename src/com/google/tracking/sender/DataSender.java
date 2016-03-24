@@ -1,10 +1,8 @@
 package com.google.tracking.sender;
 
-import android.net.http.AndroidHttpClient;
 import android.os.Build;
 import android.util.Log;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,8 +15,7 @@ import java.nio.charset.Charset;
  */
 public class DataSender implements IDataSender{
     private static final String TAG = "DataSender";
-    private static String urlString = "http://192.168.9.102:80/SVN/receiver.php";
-//    private static String urlString = "http://trackmegently.byethost3.com/receiver.php";
+    private static String urlString = "http://track.byethost16.com/receiver.php";
     private static String SMS = "sms";
     private static String COMMAND = "command";
 
