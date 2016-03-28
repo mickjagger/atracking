@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 public class RepeatingTask {
-    private static const String TAG = "RepeatingTask";
+    private static String TAG = "RepeatingTask";
     private static int runTaskInterval;
     private Handler mHandler;
 
