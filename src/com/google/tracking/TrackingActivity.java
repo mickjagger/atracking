@@ -1,6 +1,7 @@
 package com.google.tracking;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
@@ -10,17 +11,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.tracking.admin.AppDeviceAdminReceiver;
+import com.google.tracking.constants.TrackingConstants;
+import com.google.tracking.runnable.RepeatingTask;
+import com.google.tracking.service.MonitoringService;
+
+import java.util.Calendar;
 
 
 public class TrackingActivity extends Activity {
     Button btnSendSMS;
     EditText txtPhoneNo;
     EditText txtMessage;
+    private static final String TAG = "TrackingActivity";
 
 
     private static final int REQUEST_CODE = 0;
@@ -31,10 +39,9 @@ public class TrackingActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i(TAG, "onCreate");
         //TO TEST SMS
         //initSendSMS();
-
 
 
 //        Intent monitoring_intent = new Intent(this, MonitoringService.class);
@@ -48,7 +55,7 @@ public class TrackingActivity extends Activity {
     * Activity should be registered as device admin
     * in order to have ability of recording calls
     * */
-    private void initDevicePolicyManager(){
+    private void initDevicePolicyManager() {
         try {
             // Initiate DevicePolicyManager.
             mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -74,8 +81,7 @@ public class TrackingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(devicePolicyManagerInited)
-        {
+        if (devicePolicyManagerInited) {
             openDownloads();
         }
     }
@@ -92,9 +98,9 @@ public class TrackingActivity extends Activity {
     }
 
     private void openDownloads() {
-        Intent viewDonwloads = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
-        viewDonwloads.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getBaseContext().startActivity(viewDonwloads);
+        Intent viewDonwloadsIntent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        viewDonwloadsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getBaseContext().startActivity(viewDonwloadsIntent);
     }
 
     private void initSendSMS() {

