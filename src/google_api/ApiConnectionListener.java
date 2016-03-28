@@ -33,8 +33,7 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
                 mGoogleApiClient);
 
         if (mLastLocation != null) {
-            Log.d(TAG, String.valueOf(mLastLocation.getLatitude()));
-            Log.d(TAG, String.valueOf(mLastLocation.getLongitude()));
+            Log.d(TAG, String.valueOf(mLastLocation.getLatitude()) + "," + String.valueOf(mLastLocation.getLongitude()));
         }
     }
 
