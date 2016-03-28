@@ -80,7 +80,9 @@ public class TService extends Service {
                     .addOnConnectionFailedListener(l)
                     .addApi(LocationServices.API)
                     .build();
+            l.setClient(mGoogleApiClient);
         }
+
         mGoogleApiClient.connect();
     }
 
