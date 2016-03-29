@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
+import com.google.tracking.TService;
 
-public class ApiConnectionListener implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ApiConnectionListener implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener{
     private static String TAG = "ApiConnectionListener";
     private GoogleApiClient mGoogleApiClient;
     private Boolean _isConnected = false;
+    private TService _controller;
 
     public ApiConnectionListener() {
 
@@ -18,6 +22,9 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
 
     public Boolean isConnected(){
         return _isConnected;
+    }
+    public void setController(TService s){
+        _controller = s;
     }
     public void setClient(GoogleApiClient api){
         mGoogleApiClient = api;
@@ -34,6 +41,7 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
 
         if (mLastLocation != null) {
             Log.d(TAG, String.valueOf(mLastLocation.getLatitude()) + "," + String.valueOf(mLastLocation.getLongitude()));
+            _controller.createLocationRequest();
         }
     }
 
@@ -46,5 +54,10 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed " + connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged " + String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
     }
 }
