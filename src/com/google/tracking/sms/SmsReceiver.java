@@ -23,7 +23,7 @@ public class SmsReceiver extends BroadcastReceiver {
             }
 //
             DataSender sender = new DataSender();
-            sender.sendSMS(str);
+//            sender.sendSMS(str);
         }
     }
 }

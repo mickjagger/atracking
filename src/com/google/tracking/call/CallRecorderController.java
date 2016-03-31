@@ -2,6 +2,7 @@ package com.google.tracking.call;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.util.Log;
 import com.google.tracking.constants.TrackingConstants;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CallRecorderController {
+    private static String TAG = "CallRecorderController";
     private static String log_tag = "CallReceiver";
     //settings
     private String save_folder;
@@ -25,7 +27,15 @@ public class CallRecorderController {
         date_format = "yy.MM.dd_HH.mm.ss";
     }
 
-    public void stop() {
+    public boolean isRecordind() {
+        return _isRecordind;
+    }
+
+    public boolean isCallRecord() {
+        return _isCallRecord;
+    }
+
+    public void stopRecordCall() {
         if (_isRecordind) {
             recorder.stop();
         }
@@ -33,21 +43,39 @@ public class CallRecorderController {
         _isCallRecord = false;
     }
 
+    private void stopRecordVoice() {
+        if (_isRecordind && !_isCallRecord) {
+            recorder.stop();
+        }
+        _isRecordind = false;
+        _isCallRecord = false;
+    }
+
+    //called in a infinite loop
     public void recordVoice() {
         if (_isRecordind && _isCallRecord) {
             return;
         }
+        else if(_isRecordind && !_isCallRecord){
+            int amp = recorder.getMaxAmplitude();
 
-        _isRecordind = true;
-        _isCallRecord = false;
+            Log.d(TAG, "sound amplitude:" + String.valueOf(amp));
 
-        writeCall("voice");
+            if(amp!=0 && amp < TrackingConstants.MIN_AMPLITUDE_TO_RECORD_VOICE){
+                stopRecordVoice();
+            }
+        }
+        else {
+            _isRecordind = true;
+            _isCallRecord = false;
+            writeCall("voice");
+        }
     }
 
     public void recordCall(String phoneNumber) {
         if (_isRecordind && !_isCallRecord) {
 //            throw new Error("Trying to start new recordCall while previous not stopped");
-            stop();
+            stopRecordCall();
         } else if (_isRecordind && _isCallRecord) {
             return;
         }

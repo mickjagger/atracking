@@ -24,6 +24,7 @@ public class TService extends Service {
     private static final String ACTION_IN = "android.intent.action.PHONE_STATE";
     private static final String ACTION_OUT = "android.intent.action.NEW_OUTGOING_CALL";
     private CallReceiver callReceiver;
+    private RepeatingTask repeatingTask;
 
 
     @Override
@@ -55,13 +56,15 @@ public class TService extends Service {
         // PhoneStateListener.LISTEN_CALL_STATE);
         // context = getApplicationContext();
 
+        recorderController = new CallRecorderController();
+
         final IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_OUT);
         filter.addAction(ACTION_IN);
         this.callReceiver = new CallReceiver();
         this.registerReceiver(this.callReceiver, filter);
 
-        new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL);
+        repeatingTask = new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL, recorderController);
 
         createGoolApiClient();
 
@@ -106,16 +109,18 @@ public class TService extends Service {
                 mGoogleApiClient, mApiConnectionListener);
     }
 
+    CallRecorderController recorderController;
+
     public class CallReceiver extends BroadcastReceiver {
         private String log_tag = "CallReceiver";
         Bundle bundle;
         String state;
         String inCall, outCall;
         public boolean wasRinging = false;
-        CallRecorderController recorderController;
+
 
         public CallReceiver() {
-            recorderController = new CallRecorderController();
+
         }
 
         @Override
@@ -159,7 +164,7 @@ public class TService extends Service {
                         wasRinging = false;
 //                        Toast.makeText(context, "REJECT || DISCO : " + inCall, Toast.LENGTH_LONG).show();
                         Log.d(log_tag, "REJECT || DISCO : " + inCall);
-                        recorderController.stop();
+                        recorderController.stopRecordCall();
                     }
                 }
             } else if (intent.getAction().equals(ACTION_OUT)) {
