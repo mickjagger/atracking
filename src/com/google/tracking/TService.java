@@ -152,7 +152,7 @@ public class TService extends Service {
 
 //                            Toast.makeText(context, "ANSWERED : " + inCall, Toast.LENGTH_LONG).show();
                             Log.d(log_tag, "ANSWERED : " + inCall);
-                            recorderController.record(inCall);
+                            recorderController.recordCall(inCall);
 
                         }
                     } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
@@ -167,7 +167,7 @@ public class TService extends Service {
                     outCall = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 //                    Toast.makeText(context, "OUT : " + outCall, Toast.LENGTH_LONG).show();
                     Log.d(log_tag, "OUT : " + outCall);
-                    recorderController.record(outCall);
+                    recorderController.recordCall(outCall);
                 }
             }
         }

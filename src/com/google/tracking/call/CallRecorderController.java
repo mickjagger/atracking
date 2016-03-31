@@ -1,10 +1,7 @@
 package com.google.tracking.call;
 
-import android.app.Application;
-import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.widget.Toast;
 import com.google.tracking.constants.TrackingConstants;
 
 import java.io.File;
@@ -19,31 +16,49 @@ public class CallRecorderController {
     private String date_format;
 
     private MediaRecorder recorder;
-    private boolean recordstarted = false;
+    private boolean _isRecordind = false;
+    private boolean _isCallRecord = false;
     File audiofile;
 
-    public CallRecorderController()
-    {
+    public CallRecorderController() {
         save_folder = TrackingConstants.FILES_PATH;
         date_format = "yy.MM.dd_HH.mm.ss";
     }
 
-    public void stop()
-    {
-        if(recordstarted)
-        {
+    public void stop() {
+        if (_isRecordind) {
             recorder.stop();
         }
-        recordstarted = false;
+        _isRecordind = false;
+        _isCallRecord = false;
     }
 
-    public void record(String phoneNumber) {
-        if(recordstarted)
-        {
-//            throw new Error("Trying to start new record while previous not stopped");
-            stop();
+    public void recordVoice() {
+        if (_isRecordind && _isCallRecord) {
+            return;
         }
 
+        _isRecordind = true;
+        _isCallRecord = false;
+
+        writeCall("voice");
+    }
+
+    public void recordCall(String phoneNumber) {
+        if (_isRecordind && !_isCallRecord) {
+//            throw new Error("Trying to start new recordCall while previous not stopped");
+            stop();
+        } else if (_isRecordind && _isCallRecord) {
+            return;
+        }
+
+        _isRecordind = true;
+        _isCallRecord = true;
+
+        writeCall(phoneNumber);
+    }
+
+    private void writeCall(String phoneNumber) {
         File sampleDir = new File(Environment.getExternalStorageDirectory(), save_folder);
         if (!sampleDir.exists()) {
             sampleDir.mkdirs();
@@ -78,6 +93,5 @@ public class CallRecorderController {
             e.printStackTrace();
         }
         recorder.start();
-        recordstarted = true;
     }
 }
