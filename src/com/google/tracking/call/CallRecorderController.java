@@ -27,6 +27,11 @@ public class CallRecorderController {
         date_format = "yy.MM.dd_HH.mm.ss";
     }
 
+    public String currentFileName(){
+        if (audiofile == null) return "";
+        return audiofile.getName();
+    }
+
     public boolean isRecordind() {
         return _isRecordind;
     }

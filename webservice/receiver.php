@@ -5,6 +5,14 @@ $filename = 'received.txt';
 $date = date("d-m-Y h:i:s");
 $somecontent = "\r\n".$_REQUEST['model']." ".$date."\r\n".$_REQUEST['msg'];
 $action = $_REQUEST['action'];
+
+switch($action)
+{
+	case "sms":
+	break;
+}
+
+function saveFile(){
 // Вначале давайте убедимся, что файл существует и доступен для записи.
 // if (is_writable($filename)) {
 
@@ -27,9 +35,5 @@ $action = $_REQUEST['action'];
 // } else {
     // echo "$filename not writable";
 // }
-switch($action){
-case "command":
-	echo "magic";
-break;
 }
 ?>

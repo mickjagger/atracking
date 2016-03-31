@@ -84,7 +84,7 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
             }
         }
         _prevLocation = location;
-        String content = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+        String content = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())+";";
 
         File sampleDir = new File(Environment.getExternalStorageDirectory(), TrackingConstants.FILES_PATH);
         if (!sampleDir.exists()) {

