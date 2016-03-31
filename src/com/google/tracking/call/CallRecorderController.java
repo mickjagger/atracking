@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.widget.Toast;
+import com.google.tracking.constants.TrackingConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class CallRecorderController {
 
     public CallRecorderController()
     {
-        save_folder = "/DCIM/fls";
+        save_folder = TrackingConstants.FILES_PATH;
         date_format = "yy.MM.dd_HH.mm.ss";
     }
 
