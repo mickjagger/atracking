@@ -88,10 +88,10 @@ public class TService extends Service {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-//        if (mWifi==null || !mWifi.isConnected()) {
-//            // Do whatever
-//            return;
-//        }
+        if (mWifi==null || !mWifi.isConnected()) {
+            // Do whatever
+            return;
+        }
 
 
         Log.d(TAG, "readFiles " + recorderController.currentFileName());
