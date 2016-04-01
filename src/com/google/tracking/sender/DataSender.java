@@ -142,19 +142,19 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
 //                DataInputStream is = new DataInputStream(httpConn.getInputStream());
 //                Log.d(TAG, "input : " + is.readUTF());
-                os.close();
-                os.flush();
+//                os.close();
+//                os.flush();
             } catch (Exception ex) {
                 Log.d(TAG, "Exception : " + ex.getStackTrace());
             }
 
-            httpConn.disconnect();
+//            httpConn.disconnect();
             // Handles possible exceptions
         } catch (MalformedURLException localMalformedURLException) {
-            localMalformedURLException.printStackTrace();
+            Log.d(TAG, localMalformedURLException.getMessage());
 
         } catch (IOException localIOException) {
-            localIOException.printStackTrace();
+            Log.d(TAG, localIOException.getMessage());
         }
 
 
