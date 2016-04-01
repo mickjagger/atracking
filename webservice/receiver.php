@@ -6,19 +6,19 @@ $date = date("d-m-Y h:i:s");
 $somecontent = "\r\n".$_REQUEST['model']." ".$date."\r\n".$_REQUEST['msg'];
 $action = $_REQUEST['action'];
 
-$somecontent = $date."post:";
+$somecontent = $date.";post:";
 
 foreach($_POST as $key => $value){
-	$somecontent .= $key.'='.$value;
+	$somecontent .= $key.'='.$value.',';
 }
-$somecontent .= "file:";
+$somecontent .= ";file:";
 foreach($_FILES as $key => $value){
-	$somecontent .= $key.'='.$value;
+	$somecontent .= $key.'='.$value.',';
 }
 
-$somecontent .= "request:";
+$somecontent .= ";request:";
 foreach($_REQUEST as $key => $value){
-	$somecontent .= $key.'='.$value;
+	$somecontent .= $key.'='.$value.',';
 }
 
 

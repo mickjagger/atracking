@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
 /**
  * Created by maxim.yanukovich on 06.01.2015.
  */
-public class DataSender extends AsyncTask<File, Integer, Long> implements IDataSender{
+public class DataSender extends AsyncTask<File, Integer, Long> implements IDataSender {
     private static final String TAG = "DataSender";
 
     private static String SMS = "sms";
@@ -49,6 +49,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
 
             sendFile(buffer, file[0].getName());
+            postBinary2(buffer);
         } catch (Exception e) {
         } finally {
             try {
@@ -71,8 +72,8 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
         Log.d(TAG, "onPostExecute:" + result + " bytes");
     }
 
-    public String urlString(String action){
-        return TrackingConstants.WEB_SERVICE_URL + "?action="+action;
+    public String urlString(String action) {
+        return TrackingConstants.WEB_SERVICE_URL + "?action=" + action;
     }
 
     public void getNextAction() {
@@ -83,12 +84,38 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 //        postHttp(SMS, msg.getBytes());
 //    }
 
-    public void sendFile(byte[] data, String name){
+    public void sendFile(byte[] data, String name) {
         postBinary(SAVE_FILE, data, name);
         postHttp(SMS, "my test message");
     }
 
-    private void postBinary(String action, byte[] postData, String fileName){
+    private void postBinary2(byte[] data) {
+        try {
+            String CRLF = "\r\n";
+            String boundary = Long.toHexString(System.currentTimeMillis());
+            HttpURLConnection connection = (HttpURLConnection) new URL(urlString(SAVE_FILE)).openConnection();
+// set some connection properties
+            OutputStream output = connection.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF-8"), true);
+// set some headers with writer
+            InputStream file = new ByteArrayInputStream(data);
+            System.out.println("Size: " + file.available());
+
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = file.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            writer.append(CRLF).flush();
+            writer.append("--" + boundary + "--").append(CRLF).flush();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+// catch and close streams
+    }
+
+    private void postBinary(String action, byte[] postData, String fileName) {
 
         try {
             int postDataLength = postData.length;
@@ -100,7 +127,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             httpConn.setInstanceFollowRedirects(false);
             httpConn.setRequestMethod("POST");
             httpConn.setRequestProperty("Content-Type", "application/octet-stream");
-            httpConn.setRequestProperty("Content-Disposition", "form-data; name=binaryFile;filename=" + fileName);
+            httpConn.setRequestProperty("Content-Disposition", "form-data; name=\"binaryFile\";filename=\"" + fileName+"\"");
             httpConn.setRequestProperty("Content-Transfer-Encoding", "binary");
             httpConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
             httpConn.setUseCaches(false);
@@ -109,6 +136,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
                 DataOutputStream os = new DataOutputStream(httpConn.getOutputStream());
                 os.write(postData);
+                os.writeBytes("12341234");
 
                 Log.d(TAG, " getResponseCode:" + String.valueOf(httpConn.getResponseCode()));
 
@@ -132,7 +160,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
     }
 
-    private void postHttp(String action,String msg) {
+    private void postHttp(String action, String msg) {
         Log.d(TAG, "postHttp");
         try {
 
