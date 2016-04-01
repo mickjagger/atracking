@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -70,12 +72,12 @@ public class TService extends Service {
         this.callReceiver = new CallReceiver();
         this.registerReceiver(this.callReceiver, filter);
 
-        repeatingTask = new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL, recorderController);
+        repeatingTask = new RepeatingTask(TrackingConstants.RUN_REPEATING_TASK_INTERVAL, recorderController, this);
 
         createGoolApiClient();
 
         dataSender = new DataSender();
-        readFiles();
+
         // if(terminate != null) {
         // stopSelf();
         // }
@@ -83,6 +85,15 @@ public class TService extends Service {
     }
 
     public void readFiles() {
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+//        if (mWifi==null || !mWifi.isConnected()) {
+//            // Do whatever
+//            return;
+//        }
+
+
         Log.d(TAG, "readFiles " + recorderController.currentFileName());
 
         String path = Environment.getExternalStorageDirectory().toString() + TrackingConstants.FILES_PATH;
@@ -109,7 +120,9 @@ public class TService extends Service {
                     buffer = new byte[in.available()];
                     in.read(buffer);
 
-                    dataSender.sendFile(buffer);
+                    dataSender = new DataSender();
+                    dataSender.execute(file[i]);
+//                    dataSender.sendFile(buffer, file[i].getName());
                 }
                 catch (Exception e) {
                 }

