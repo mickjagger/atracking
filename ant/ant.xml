@@ -1,0 +1,29 @@
+<project name="LocalDeploy" default="deploy" basedir="..">
+    <description>
+        deploy webservice
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="webservice"/>
+    <property name="out" location="../../../SVN/"/>
+	
+    <target name="deploy"
+            description="deploy server sources">
+        <!--<copydir src="${src}/"-->
+                 <!--dest="${out}"-->
+                <!--/>-->
+
+        <ftp server="ftp.byethost16.com"
+             remotedir="/htdocs"
+             userid="b16_17737035"
+             password="userbolger1"
+             passive="yes"
+             depends="yes"
+             binary="yes">
+            <fileset dir="${src}">
+                <include name="**/*.*"/>
+            </fileset>
+        </ftp>
+    </target>
+
+
+</project>
