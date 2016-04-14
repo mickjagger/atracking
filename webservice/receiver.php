@@ -13,16 +13,26 @@ foreach($_POST as $key => $value){
 }
 $somecontent .= ";file:";
 foreach($_FILES as $key => $value){
-	$somecontent .= $key.'='.$value.',';
+	if(is_array($value)){
+		foreach($value as $v1=>$v2)
+		{
+			$somecontent .= '   '.$v1.'='.$v2.',';
+		}
+	}else
+	{
+		$somecontent .= $key.'='.$value.',';
+	}
 }
 
 $somecontent .= ";request:";
 foreach($_REQUEST as $key => $value){
-	$somecontent .= $key.'='.$value.',';
+	
+		$somecontent .= $key.'='.$value.','."/r/n";
 }
 
 
 appendFile($somecontent, $filename);
+echo "ok";
 
 switch($action)
 {
