@@ -6,11 +6,9 @@ import android.util.Log;
 import com.google.tracking.constants.TrackingConstants;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.PortUnreachableException;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * Created by maxim.yanukovich on 06.01.2015.
@@ -30,6 +28,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
     protected Long doInBackground(File... file) {
         Log.d(TAG, "doInBackground " + file[0].getName());
+        CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
 //        int count = urls.length;
         long totalSize = 0;
 //        for (int i = 0; i < count; i++) {
@@ -48,8 +47,42 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             in.read(buffer);
 
 
-            sendFile(buffer, file[0].getName());
-            postBinary2(buffer);
+            String charset = "UTF-8";
+            File uploadFile1 = new File("e:/Test/PIC1.JPG");
+            File uploadFile2 = new File("e:/Test/PIC2.JPG");
+            String requestURL = "http://track.byethost16.com/receiver.php";
+
+            try {
+                MultipartUtility multipart = new MultipartUtility(requestURL, charset);
+
+                multipart.addHeaderField("Accept", "\ttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+                multipart.addHeaderField("Accept-Encoding", "gzip, deflate");
+                multipart.addHeaderField("Accept-Language", "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3");
+                multipart.addHeaderField("Connection", "keep-alive");
+                multipart.addHeaderField("Host", "track.byethost16.com");
+                multipart.addHeaderField("Referer", "http://track.byethost16.com/upload.html");
+                multipart.addHeaderField("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0");
+
+//                multipart.addFormField("description", "Cool Pictures");
+//                multipart.addFormField("keywords", "Java,upload,Spring");
+
+                multipart.addFilePart("fileUpload", file[0]);
+//                multipart.addFilePart("fileUpload", uploadFile2);
+
+                List<String> response = multipart.finish();
+
+                Log.d(TAG, "SERVER REPLIED:");
+
+                for (String line : response) {
+                    Log.d(TAG, line);
+                }
+            } catch (IOException ex) {
+                Log.d(TAG,"Exception!!! " +  ex.getMessage());
+            }
+
+//            sendFile(buffer, file[0].getName());
+//            postBinary2(buffer);
+//                postHttp("myCoolAction","message");
         } catch (Exception e) {
         } finally {
             try {
@@ -57,7 +90,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
                     in.close();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Log.d(TAG, ex.getMessage());
             }
         }
 
@@ -73,7 +106,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
     }
 
     public String urlString(String action) {
-        return TrackingConstants.WEB_SERVICE_URL + "?action=" + action;
+        return TrackingConstants.WEB_SERVICE_URL;// + "?action=" + action;
     }
 
     public void getNextAction() {
@@ -86,11 +119,12 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
 
     public void sendFile(byte[] data, String name) {
         postBinary(SAVE_FILE, data, name);
-        postHttp(SMS, "my test message");
+//        postHttp(SMS, "my test message");
     }
 
     private void postBinary2(byte[] data) {
         try {
+            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
             String CRLF = "\r\n";
             String boundary = Long.toHexString(System.currentTimeMillis());
             HttpURLConnection connection = (HttpURLConnection) new URL(urlString(SAVE_FILE)).openConnection();
@@ -99,7 +133,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF-8"), true);
 // set some headers with writer
             InputStream file = new ByteArrayInputStream(data);
-            System.out.println("Size: " + file.available());
+            Log.d(TAG, "Size: " + file.available());
 
             byte[] buffer = new byte[4096];
             int length;
@@ -118,6 +152,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
     private void postBinary(String action, byte[] postData, String fileName) {
 
         try {
+            CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
             int postDataLength = postData.length;
             Log.d(TAG, "postBinary:" + postDataLength);
             URL url = new URL(urlString(action));
@@ -135,17 +170,27 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             try {
 
                 DataOutputStream os = new DataOutputStream(httpConn.getOutputStream());
+                Log.d(TAG, "!!!!" + new String(postData, "UTF-8"));
                 os.write(postData);
-                os.writeBytes("12341234");
+//                os.writeBytes("12341234");
 
                 Log.d(TAG, " getResponseCode:" + String.valueOf(httpConn.getResponseCode()));
 
-//                DataInputStream is = new DataInputStream(httpConn.getInputStream());
-//                Log.d(TAG, "input : " + is.readUTF());
-//                os.close();
-//                os.flush();
+                os.flush();
+                os.close();
+
+                InputStream in = new DataInputStream(httpConn.getInputStream());
+                String outdata = "";
+                // count the available bytes form the input stream
+                int count = in.available();
+                // create buffer
+                byte[] bs = new byte[count];
+                in.read(bs);
+                in.close();
+                outdata = new String(bs, "UTF-8");
+                Log.d(TAG, "http output: "+ outdata);
             } catch (Exception ex) {
-                Log.d(TAG, "Exception : " + ex.getStackTrace());
+                Log.d(TAG, "Exception : " + ex.getMessage());
             }
 
 //            httpConn.disconnect();
@@ -168,37 +213,33 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
             int postDataLength = postData.length;
 
-            URL url = new URL(urlString(action));
-            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-            httpConn.setDoOutput(true);
-            httpConn.setDoInput(true);
-            httpConn.setInstanceFollowRedirects(false);
-            httpConn.setRequestMethod("POST");
-            httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            httpConn.setRequestProperty("charset", "utf-8");
-            httpConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-            httpConn.setUseCaches(false);
-            httpConn.connect();
+            URL url = new URL("http://track.byethost16.com/receiver.php");
+            HttpURLConnection httConn = (HttpURLConnection) url.openConnection();
+            httConn.setDoOutput(true);
+            httConn.setDoInput(true);
+            httConn.setInstanceFollowRedirects(false);
+            httConn.setRequestMethod("GET");
+            httConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            httConn.setRequestProperty("charset", "utf-8");
+            httConn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            httConn.setUseCaches(false);
+            httConn.connect();
             try {
-                DataOutputStream os = new DataOutputStream(httpConn.getOutputStream());
+                DataOutputStream os = new DataOutputStream(httConn.getOutputStream());
                 os.write(postData);
-
-                Log.d(TAG, " getResponseCode:" + String.valueOf(httpConn.getResponseCode()));
-
-//               DataInputStream is = new DataInputStream(httpConn.getInputStream());
-//               Log.d(TAG, "input : " + is.readUTF());
+                Log.d("getResponseCode", String.valueOf(httConn.getResponseCode()));
 
             } catch (Exception ex) {
-                Log.d(TAG, "Exception : " + ex.getStackTrace());
+                Log.d("Exception!!!!:", ex.getMessage());
             }
 
-            httpConn.disconnect();
+
             // Handles possible exceptions
         } catch (MalformedURLException localMalformedURLException) {
-            localMalformedURLException.printStackTrace();
+            Log.d(TAG, "Exception!!!!:" + localMalformedURLException.getMessage());
 
         } catch (IOException localIOException) {
-            localIOException.printStackTrace();
+            Log.d(TAG, "Exception!!!!:" + localIOException.getMessage());
         }
     }
 
