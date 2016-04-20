@@ -1,4 +1,4 @@
-package google_api;
+package com.google.tracking.google_api;
 
 import android.location.Location;
 import android.os.Bundle;

