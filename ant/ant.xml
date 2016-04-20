@@ -1,4 +1,4 @@
-<project name="LocalDeploy" default="deploy" basedir="..">
+<project name="LocalDeploy" basedir="..">
     <description>
         deploy webservice
     </description>
@@ -6,8 +6,8 @@
     <property name="src" location="webservice"/>
     <property name="out" location="../../../SVN/"/>
 	
-    <target name="upload to byethost ftp"
-            description="deploy server sources">
+    <target name="upload_to_byethost_ftp"
+            description="upload to byethost ftp">
         <!--<copydir src="${src}/"-->
                  <!--dest="${out}"-->
                 <!--/>-->
