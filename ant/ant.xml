@@ -6,7 +6,7 @@
     <property name="src" location="webservice"/>
     <property name="out" location="../../../SVN/"/>
 	
-    <target name="deploy"
+    <target name="upload to byethost ftp"
             description="deploy server sources">
         <!--<copydir src="${src}/"-->
                  <!--dest="${out}"-->
