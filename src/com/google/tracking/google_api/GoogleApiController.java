@@ -15,6 +15,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GoogleApiController implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -84,7 +86,10 @@ public class GoogleApiController implements GoogleApiClient.ConnectionCallbacks,
             }
         }
         _prevLocation = location;
-        String content = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())+";";
+
+        String time_stamp = new SimpleDateFormat("yy.MM.dd_HH.mm.ss").format(new Date());
+        String content = time_stamp + ":" + String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())
+                +";";
 
         File sampleDir = new File(Environment.getExternalStorageDirectory(), TrackingConstants.FILES_PATH);
         if (!sampleDir.exists()) {
