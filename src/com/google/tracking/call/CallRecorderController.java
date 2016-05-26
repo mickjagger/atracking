@@ -24,7 +24,8 @@ public class CallRecorderController {
 
     public CallRecorderController() {
         save_folder = TrackingConstants.FILES_PATH;
-        date_format = "yy.MM.dd_HH.mm.ss";
+//        date_format = "yy.MM.dd_HH.mm.ss";
+        date_format = "MM.dd_HH.mm.ss";
     }
 
     public String currentFileName(){

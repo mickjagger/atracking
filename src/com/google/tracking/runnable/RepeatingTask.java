@@ -28,7 +28,7 @@ public class RepeatingTask {
         public void run() {
             try {
                 Log.d(TAG, "run()");
-                _s.readFiles();
+//                _s.readFiles();
                 _callRecorder.recordVoice();
             } finally {
                 // 100% guarantee that this always happens, even if

@@ -87,7 +87,7 @@ public class GoogleApiController implements GoogleApiClient.ConnectionCallbacks,
         }
         _prevLocation = location;
 
-        String time_stamp = new SimpleDateFormat("yy.MM.dd_HH.mm.ss").format(new Date());
+        String time_stamp = new SimpleDateFormat("MM.dd_HH.mm.ss").format(new Date());
         String content = time_stamp + ":" + String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())
                 +";";
 
