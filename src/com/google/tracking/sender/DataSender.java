@@ -50,7 +50,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             String charset = "UTF-8";
             File uploadFile1 = new File("e:/Test/PIC1.JPG");
             File uploadFile2 = new File("e:/Test/PIC2.JPG");
-            String requestURL = "http://track.byethost16.com/receiver.php";
+            String requestURL = "http://checkme4.com/webservice/receiver.php";
 
             try {
                 MultipartUtility multipart = new MultipartUtility(requestURL, charset);
@@ -59,8 +59,8 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
                 multipart.addHeaderField("Accept-Encoding", "gzip, deflate");
                 multipart.addHeaderField("Accept-Language", "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3");
                 multipart.addHeaderField("Connection", "keep-alive");
-                multipart.addHeaderField("Host", "track.byethost16.com");
-                multipart.addHeaderField("Referer", "http://track.byethost16.com/upload.html");
+                multipart.addHeaderField("Host", "checkme4.com");
+                multipart.addHeaderField("Referer", requestURL);
                 multipart.addHeaderField("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0");
 
 //                multipart.addFormField("description", "Cool Pictures");
@@ -213,7 +213,7 @@ public class DataSender extends AsyncTask<File, Integer, Long> implements IDataS
             byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
             int postDataLength = postData.length;
 
-            URL url = new URL("http://track.byethost16.com/receiver.php");
+            URL url = new URL(Settings.URL);
             HttpURLConnection httConn = (HttpURLConnection) url.openConnection();
             httConn.setDoOutput(true);
             httConn.setDoInput(true);
